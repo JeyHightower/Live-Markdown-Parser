@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Markdown Compiler</title>
+    <style>
+        :root {
+            --bg-main: #0d0d0d;
+            --panel-bg: #141414;
+            --border-color: #2a2a2a;
+            --text-editor: ghostwhite;
+            --text-preview: lightgray;
+            --text-muted: silver;
+            --accent-bold: #00ffcc;
+            --accent: #7f5af0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            flex-grow: 1;
+            height: calc(100vh - 50px);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Live Markdown Compiler Workspace</h1>
+        <span>Status Light:</span>
+    </header>
+    <main class="workspace">
+        <div class="editor-container">
+            <textarea id="markdown-input" placeholder="Enter markdown here...">
+            </textarea>
+        </div>
+        <div class="preview-container">
+            <div id="preview-output" class="preview-content">
+
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

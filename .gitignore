@@ -1,0 +1,13 @@
+# --- Rust Build Artifacts ---
+/target/
+**/*.rs.bk
+
+# --- Local Environment & Logs ---
+.env
+*.log
+
+# --- OS/Editor Clutter ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
