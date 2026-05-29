@@ -15,6 +15,7 @@
             --text-muted: silver;
             --accent-bold: #00ffcc;
             --accent: #7f5af0;
+            --text-light: white;
         }
 
         body {
@@ -32,13 +33,140 @@
             flex-grow: 1;
             height: calc(100vh - 50px);
         }
+
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+        }
+
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        header span.status-badge {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background-color: var(--bg-main);
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+
+            /* Align the dot and text horizontally */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* The solid green center dot */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-bold);
+            /* Using your #00ffcc matrix green */
+            border-radius: 50%;
+            position: relative;
+        }
+
+        /* The glowing outer pulse ring */
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--accent-bold);
+            border-radius: 50%;
+
+            /* Bind our animation loop below */
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        /* The animation engine math that scales and fades the ring */
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(2.8);
+                opacity: 0;
+            }
+        }
+
+        .editor-container {
+            border-right: 1px solid var(--border-color);
+        }
+
+
+        #markdown-input {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 2rem;
+            color: var(--text-editor);
+            font-family: monospace;
+            line-height: 1.6;
+        }
+
+        .preview-container {
+            background-color: var(--panel-bg);
+            padding: 2rem;
+            overflow-y: auto;
+
+        }
+
+        .preview-content h1 {
+            color: white;
+            font-size: 2rem;
+            padding-bottom: 2px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-content h2 {
+            font-size: 1.5rem;
+            color: var(--text-preview);
+            padding-top: 1.25rem;
+        }
+
+        .preview-content p {
+            color: var(--text-preview);
+            margin-bottom: 1.25 rem;
+        }
+
+        .preview-content strong {
+            color: var(--accent-bold);
+            font-weight: 700;
+        }
+
+        .preview-content li {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            list-style-type: square;
+            color: antiquewhite;
+        }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>Live Markdown Compiler Workspace</h1>
-        <span>Status Light:</span>
+        <h1>Live Markdown Compiler</h1>
+        <span class="status-badge">
+            <span class="status-dot"></span>
+            Engine Active
+        </span>
     </header>
     <main class="workspace">
         <div class="editor-container">
@@ -52,7 +180,50 @@
         </div>
 
     </main>
+    <script>
+        const input = document.getElementById("markdown-input");
+        const preview = document.getElementById("preview-output");
 
+        async function sendMarkdownToEngine() {
+            const rawText = input.value;
+            const trimmedText = rawText.trim();
+
+            if (trimmedText === "") {
+                preview.innerHTML = "<p>Preview Displayed here...</p>";
+                return;
+            }
+            const payload = {
+                markdown: rawText
+            };
+
+            try {
+                const response = await fetch("/api/render", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    preview.innerHTML = data.html;
+                } else {
+                    preview.innerHTML = "<p>Server error while compiling markdown.</p>";
+                }
+
+            } catch (error) {
+                console.error("Network Communication Error", error);
+                preview.innerHTML = "<p>Error connecting to the rendering server.</p>";
+
+            }
+
+        }
+
+        input.addEventListener("input", sendMarkdownToEngine);
+
+
+
+    </script>
 </body>
 
 </html>
