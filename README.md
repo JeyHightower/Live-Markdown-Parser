@@ -1,5 +1,7 @@
 # Live-Markdown-Parser
 
+free hosting, first load may take about a minute.
+
 A high-performance, real-time Markdown-to-HTML rendering application built from scratch. The project features a zero-latency, full-screen split-pane web workspace backed by a custom, multi-threaded text tokenization parser engine written in Rust.
 
 ---
