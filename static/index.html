@@ -192,6 +192,7 @@
                 preview.innerHTML = "<p>Preview Displayed here...</p>";
                 return;
             }
+            
             const payload = {
                 markdown: rawText
             };
@@ -220,8 +221,6 @@
         }
 
         input.addEventListener("input", sendMarkdownToEngine);
-
-
 
     </script>
 </body>
